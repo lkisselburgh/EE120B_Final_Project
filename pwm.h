@@ -57,17 +57,13 @@ void SongTick ()
 			break;
 		
 		case off:
-			//if (eeprom_read_byte(0) == 1) { song_state = play; }
-			//else { song_state = off; }
-			if (play_song) { song_state = play; }
+			if (eeprom_read_byte(0) == 1) { song_state = play; }
 			else { song_state = off; }
 			break;
 		
 		case play:
-			//if (eeprom_read_byte(0) == 0) { song_state = off; }
-			//else { song_state = play; }
-			if (play_song) { song_state = play; }
-			else { song_state = off; }
+			if (eeprom_read_byte(0) == 0) { song_state = off; }
+			else { song_state = play; }
 			break;
 		
 		default:
@@ -89,13 +85,13 @@ void SongTick ()
 				if (A1 < 16) {
 					set_PWM(piano_1a[A1]);
 					++A1;
-					pwm = A1;
+					PORTB = A1;
 					break;
 				}
 				else if (B1 < 16) {
 					set_PWM(piano_1b[B1]);
 					++B1;
-					pwm = B1;
+					PORTB = B1;
 					break;
 				}
 				else {A1 = B1 = 0;}
@@ -106,13 +102,13 @@ void SongTick ()
 				if (A0 < 16) {
 					set_PWM(piano_0a[A0]);
 					++A0;
-					pwm = A0;
+					PORTB = A0;
 					break;
 				}
 				else if (B0 < 16) {
 					set_PWM(piano_0b[B0]);
 					++B0;
-					pwm = B0;
+					PORTB = B0;
 					break;
 				}
 				else { A0 = B0 = 0; }

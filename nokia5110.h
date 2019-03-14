@@ -20,18 +20,18 @@
 /*
  * LCD's port
  */
-#define PORT_LCD PORTB
-#define DDR_LCD DDRB
+#define PORT_LCD PORTD
+#define DDR_LCD DDRD
 
 /*
  * LCD's pins
  */
 
-#define LCD_SCE PB0
-#define LCD_RST PB1
-#define LCD_DC PB2
-#define LCD_DIN PB5
-#define LCD_CLK PB7
+#define LCD_SCE PD0
+#define LCD_RST PD1
+#define LCD_DC PD2
+#define LCD_DIN PD5
+#define LCD_CLK PD7
 
 #define LCD_CONTRAST 0x40
 
@@ -89,6 +89,8 @@ void nokia_lcd_render(void);
 
 // =========== Room Functions =============
 
+
+
 void nokia_draw_room() {
 	//nokia_lcd_clear();
 	
@@ -112,12 +114,80 @@ void nokia_draw_room() {
 	//nokia_lcd_render();
 }
 
-/* */
+void nokia_draw_enemies(uint8_t NW_enemy, uint8_t NE_enemy, uint8_t SW_enemy, uint8_t SE_enemy) {
+	unsigned char end_x;
+	if (NW_enemy) {
+		for (int x = 4; x < 11; x++) {
+			for (int y = 4; y < 11; y++) {
+				nokia_lcd_set_pixel(x, y, 1);
+			}
+		}
+		end_x = 10;
+		nokia_lcd_set_pixel(end_x-5, 10, 0);
+		nokia_lcd_set_pixel(end_x-3, 10, 0);
+		nokia_lcd_set_pixel(end_x-1, 10, 0);
+		nokia_lcd_set_pixel(end_x-6, 4, 0);
+		nokia_lcd_set_pixel(end_x, 4, 0);
+		nokia_lcd_set_pixel(end_x-5, 6, 0);
+		nokia_lcd_set_pixel(end_x-1, 6, 0);
+		nokia_lcd_set_pixel(end_x-3, 8, 0);
+	}
+	if (NE_enemy) {
+	//if (room >= 2) {
+		for (int x = 73; x < 80; x++) {
+			for (int y = 4; y < 11; y++) {
+				nokia_lcd_set_pixel(x, y, 1);
+			}
+		}
+		end_x = 79;
+		nokia_lcd_set_pixel(end_x-5, 10, 0);
+		nokia_lcd_set_pixel(end_x-3, 10, 0);
+		nokia_lcd_set_pixel(end_x-1, 10, 0);
+		nokia_lcd_set_pixel(end_x-6, 4, 0);
+		nokia_lcd_set_pixel(end_x, 4, 0);
+		nokia_lcd_set_pixel(end_x-5, 6, 0);
+		nokia_lcd_set_pixel(end_x-1, 6, 0);
+		nokia_lcd_set_pixel(end_x-3, 8, 0);
+	}
+	if (SW_enemy) {
+		for (int x = 20; x < 27; x++) {
+			for (int y = 36; y < 43; y++) {
+				nokia_lcd_set_pixel(x, y, 1);
+			}
+		}
+		end_x = 26; // y < 11
+		nokia_lcd_set_pixel(end_x-5, 42, 0);
+		nokia_lcd_set_pixel(end_x-3, 42, 0);
+		nokia_lcd_set_pixel(end_x-1, 42, 0);
+		nokia_lcd_set_pixel(end_x-6, 36, 0);
+		nokia_lcd_set_pixel(end_x, 36, 0);
+		nokia_lcd_set_pixel(end_x-5, 38, 0);
+		nokia_lcd_set_pixel(end_x-1, 38, 0);
+		nokia_lcd_set_pixel(end_x-3, 40, 0);
+	}
+	if (SE_enemy) {
+		for (int x = 61; x < 68; x++) {
+			for (int y = 36; y < 43; y++) {
+				nokia_lcd_set_pixel(x, y, 1);
+			}
+		}
+		end_x = 67;
+		nokia_lcd_set_pixel(end_x-5, 42, 0);
+		nokia_lcd_set_pixel(end_x-3, 42, 0);
+		nokia_lcd_set_pixel(end_x-1, 42, 0);
+		nokia_lcd_set_pixel(end_x-6, 36, 0);
+		nokia_lcd_set_pixel(end_x, 36, 0);
+		nokia_lcd_set_pixel(end_x-5, 38, 0);
+		nokia_lcd_set_pixel(end_x-1, 38, 0);
+		nokia_lcd_set_pixel(end_x-3, 40, 0);
+	}
+	nokia_lcd_render();
+}
 
 void nokia_draw_character(uint8_t x0, uint8_t y0) {
 	nokia_lcd_clear();
 	nokia_draw_room();
-	//nokia_draw_enemies();
+	//nokia_draw_enemies(room);
 	
 	for (int x = x0; x < x0+6; x++) {
 		for (int y = y0; y < y0+5; y++) {
@@ -153,6 +223,21 @@ void nokia_draw_character(uint8_t x0, uint8_t y0) {
 	for (int x = x0; x < x0+6; x++) {
 		nokia_lcd_set_pixel(x, y0+6, 1);
 		nokia_lcd_set_pixel(x, y0+7, 1);
+	}
+	nokia_lcd_render();
+}
+
+void nokia_draw_exit() {
+	nokia_lcd_set_pixel(1,24,1);
+	nokia_lcd_set_pixel(2,23,1);
+	nokia_lcd_set_pixel(2,24,1);
+	nokia_lcd_set_pixel(2,25,1);
+	for (int y = 22; y < 27; y++ ) { nokia_lcd_set_pixel(3, y, 1); }
+	for (int y = 21; y < 28; y++ ) { nokia_lcd_set_pixel(4, y, 1); }
+	for (int x = 5; x < 10; x++ ) {
+		for (int y = 23; y < 26; y++) {
+			nokia_lcd_set_pixel(x, y, 1);
+		}
 	}
 	nokia_lcd_render();
 }

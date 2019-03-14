@@ -12,7 +12,7 @@ void MenuTick()
 			break;
 		case menu_on:
 			//tmpB = ~PINA;
-			if ((~PINA & 0x01) == 0x01)
+			if ((~PINA & 0x10) == 0x10)
 			{
 				if (pos == 20) { menu_state = start_game; str_out = 0;}
 				else if (pos == 30) { menu_state = controls; str_out = 0; }
@@ -25,17 +25,15 @@ void MenuTick()
 			menu_state = start_game;
 			break;
 		case controls:
+			tmpB = ~PINA;
+			if((tmpB & 0x04) == 0x04) { menu_state = menu_on; str_out = 0; }
+			else { menu_state = controls; }
 			break;
 		case settings:
-			tmpB = ~PINA & 0x08;
-			if (tmpB == 0x08) {
-				menu_state = menu_on;
-				break;
-			}
-			else {
-				menu_state = settings;
-				break;
-			}
+			tmpB = ~PINA;
+			if((tmpB & 0x04) == 0x04) { menu_state = menu_on; str_out = 0; }
+			else { menu_state = settings; }
+			break;
 	}
 	switch (menu_state)
 	{
@@ -49,7 +47,7 @@ void MenuTick()
 				nokia_lcd_set_cursor(0, 20);
 				nokia_lcd_write_string("  Start Game",1);
 				nokia_lcd_set_cursor(0, 30);
-				nokia_lcd_write_string("  Introduction",1);
+				nokia_lcd_write_string("  Controls",1);
 				nokia_lcd_set_cursor(0, 40);
 				nokia_lcd_write_string("  Settings",1);
 				pos = 20;
@@ -62,9 +60,10 @@ void MenuTick()
 			{
 				nokia_lcd_set_cursor(1, pos);
 				nokia_lcd_write_string(" ",1);
-				//nokia_lcd_render();	
+					
 				if (pos == 40) { pos = 20; }
 				else { pos += 10; }
+					
 				nokia_lcd_set_cursor(1, pos);
 				nokia_lcd_write_string(">",1);
 				nokia_lcd_render();
@@ -82,23 +81,31 @@ void MenuTick()
 			break;
 		case start_game:
 			game_running = 1;
-			//nokia_lcd_clear();
 			break;
 		case controls:
 			if (!str_out)
 			{
 				nokia_lcd_clear();
 				nokia_lcd_set_cursor(1,0);
-				nokia_lcd_write_string("Use the buttons to move up, down, left, or right.", 1);
+				nokia_lcd_write_string("Use the right buttons to    move. Use the button to the left to select or attack.", 1);
 				nokia_lcd_render();
 				str_out = 1;
 			}
 			break;
 		case settings:
-			//PORTC = 0x10;
-			tmpB = ~PINA & 0x02;
-			if (tmpB == 0x02) {
-				//if (play_song == 0) { play_song = 1; }
+			if (!str_out) {
+				nokia_lcd_clear();
+				nokia_lcd_set_cursor(0, 0);
+				nokia_lcd_write_string("  Settings", 1);
+				nokia_lcd_set_cursor(0, 20);
+				nokia_lcd_write_string("  Toggle Music", 1);
+				nokia_lcd_set_cursor(1, 20);
+				nokia_lcd_write_string(">", 1);
+				nokia_lcd_render();
+				str_out = 1;
+			}
+			tmpB = ~PINA;
+			if ((tmpB & 0x10) == 0x10) {
 				if (eeprom_read_byte(0) == 0) {eeprom_write_byte(0,1);}
 				else { eeprom_write_byte(0,0); }
 			}
